@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Special for Tina ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Sacramento&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #090314;
+            overflow: hidden;
+            color: white;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Ambient Glow Background */
+        .ambient-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255, 77, 109, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        /* Spotify Dropdown Animation */
+        .spotify-banner {
+            transform: translateY(-150%);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .spotify-banner.active {
+            transform: translateY(0);
+        }
+
+        /* Ultimate Cyber-Glow Button */
+        .ultimate-btn {
+            position: relative;
+            background: linear-gradient(45deg, #ff4d6d, #8a2be2);
+            border-radius: 50px;
+            padding: 16px 40px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 77, 109, 0.4), 0 0 40px rgba(138, 43, 226, 0.2);
+            transition: all 0.3s ease;
+        }
+        .ultimate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        .ultimate-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 10px rgba(255, 77, 109, 0.6);
+        }
+        .ultimate-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Audio Visualizer Waves */
+        .eq-bar {
+            width: 3px;
+            background-color: #1DB954;
+            animation: bounce 0.5s ease infinite alternate;
+            border-radius: 3px;
+        }
+        @keyframes bounce {
+            0% { height: 4px; }
+            100% { height: 20px; }
+        }
+
+        /* Spotify Style Falling Lyrics */
+        .lyric-drop {
+            position: absolute;
+            top: -50px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.08);
+            font-size: 24px;
+            white-space: nowrap;
+            pointer-events: none;
+            animation: dropDown 8s linear forwards;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            z-index: 0;
+        }
+        @keyframes dropDown {
+            0% { transform: translateY(0) rotate(-5deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(110vh) rotate(5deg); opacity: 0; }
+        }
+
+        /* Glass Panel Styling */
+        .premium-glass {
+            background: rgba(15, 10, 25, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Floating Glow Orb Behind Next Button */
+        .pulse-ring {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: rgba(255, 77, 109, 0.2);
+            animation: ripple 2s infinite ease-out;
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        /* Polaroid Effect */
+        .polaroid-frame {
+            background: white;
+            padding: 10px 10px 25px 10px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            transform: rotate(-2deg);
+            transition: transform 0.5s ease;
+        }
+        .polaroid-frame:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        /* Custom Typewriter Cursor */
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background-color: #ff4d6d;
+            margin-left: 3px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .hidden-screen {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .active-screen {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center justify-center p-4">
+
+    <div class="ambient-bg"></div>
+    <div id="lyricContainer" class="absolute inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+    <!-- Audio Element (Lagu Romantis) -->
+    <audio id="spotifyTrack" loop>
+        <source src="https://vague-aqua-gxhibseb.edgeone.dev/ssstik.io_1784003947725.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- TOP SECTION: Spotify-Style Floating Player -->
+    <div id="spotifyPlayer" class="spotify-banner fixed top-4 left-4 right-4 z-40 premium-glass rounded-2xl p-3 flex items-center justify-between border border-emerald-500/20 shadow-[0_4px_30px_rgba(29,185,84,0.15)]">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-800 relative group shadow-md">
+                <img src="https://i.ibb.co.com/9H1LLmtp/Spotify-logo-without-text-svg.png" alt="Album Cover" class="w-full h-full object-cover animate-[spin_8s_linear_infinite]">
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <i class="fa-solid fa-heart text-xs text-emerald-400"></i>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold tracking-wide text-white truncate max-w-[160px]">Sempurna (Untuk Tina)</h4>
+                <p class="text-[10px] text-emerald-400 font-medium flex items-center gap-1 mt-0.5">
+                    <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Ilham Sayang Tina
+                </p>
+            </div>
+        </div>
+        
+        <!-- Equalizer & Progress Tracker -->
+        <div class="flex flex-col items-end gap-1.5 pr-2">
+            <div class="flex items-end gap-0.5 h-5">
+                <div class="eq-bar" style="animation-delay: 0.1s"></div>
+                <div class="eq-bar" style="animation-delay: 0.3s"></div>
+                <div class="eq-bar" style="animation-delay: 0.2s"></div>
+                <div class="eq-bar" style="animation-delay: 0.4s"></div>
+            </div>
+            <div class="w-24 bg-white/20 h-1 rounded-full overflow-hidden">
+                <div id="trackProgress" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 1: Welcome/Intro Screen -->
+    <div id="screenIntro" class="absolute inset-0 z-30 flex flex-col items-center justify-center p-6 text-center transition-all duration-700">
+        <div class="premium-glass p-8 rounded-3xl w-full max-w-sm flex flex-col items-center border border-pink-500/20">
+            <div class="relative w-20 h-20 flex items-center justify-center mb-6">
+                <div class="absolute inset-0 rounded-full bg-pink-500/10 blur-xl"></div>
+                <i class="fa-solid fa-compact-disc text-5xl text-pink-400 animate-[spin_4s_linear_infinite]"></i>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight mb-2 bg-gradient-to-r from-white via-pink-200 to-white bg-clip-text text-transparent">Spesial Buat Cantikku</h1>
+            <p class="text-xs text-gray-400 max-w-[240px] mb-8 leading-relaxed">Pakai earphone ya, dengerin baik-baik pesan dari Ilham.</p>
+            
+            <!-- Super Cool Button -->
+            <button onclick="initiateExperience()" class="ultimate-btn text-white w-full flex items-center justify-center gap-2">
+                <span>Mulai Sekarang</span>
+                <i class="fa-solid fa-play text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: Typewriter Interactive Story -->
+    <div id="screenStory" class="hidden-screen absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center">
+        <div class="premium-glass w-full max-w-sm p-8 min-h-[380px] rounded-3xl flex flex-col items-center justify-between relative border border-white/5">
+            
+            <!-- Quote icon styling -->
+            <div class="opacity-20 text-4xl text-pink-400 w-full text-left font-serif h-4">“</div>
+            
+            <!-- The Main Text Display Container -->
+            <div class="flex-grow flex items-center justify-center w-full my-4">
+                <p class="text-base md:text-lg font-medium leading-relaxed tracking-wide text-gray-100">
+                    <span id="storyText"></span><span class="cursor"></span>
+                </p>
+            </div>
+            
+            <div class="opacity-20 text-4xl text-pink-400 w-full text-right font-serif h-4">”</div>
+            
+            <!-- Next Interactive Button Container -->
+            <div id="nextBtnBox" class="opacity-0 pointer-events-none transition-all duration-700 mt-6 flex flex-col items-center relative">
+                <div class="pulse-ring"></div>
+                <button onclick="handleNextStep(event)" class="relative z-10 w-16 h-16 rounded-full bg-gradient-to-tr from-pink-500 to-rose-600 flex items-center justify-center shadow-[0_0_25px_rgba(244,63,94,0.6)] active:scale-90 transition-transform focus:outline-none">
+                    <i class="fa-solid fa-heart text-2xl text-white animate-pulse"></i>
+                </button>
+                <span class="text-[9px] text-pink-300 font-bold tracking-widest uppercase mt-3 animate-pulse">Sentuh Hati Ini</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: Final Emotional Climax -->
+    <div id="screenFinal" class="hidden-screen absolute inset-0 z-10 flex flex-col items-center justify-center p-6 text-center">
+        <div class="premium-glass w-full max-w-sm p-6 rounded-3xl flex flex-col items-center border border-pink-500/20 shadow-[0_0_50px_rgba(255,77,109,0.15)]">
+            
+            <!-- Polaroid Frame Image Container -->
+            <div class="polaroid-frame w-44 mb-6 z-20">
+                <img src="https://i.ibb.co.com/G39gXWfM/IMG-20260714-WA0013.jpg" alt="Tina Cantik" class="w-full object-cover rounded-sm aspect-square">
+            </div>
+
+            <h1 class="font-['Sacramento'] text-5xl text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-rose-400 tracking-wider mb-2 drop-shadow-md">Ilham ❤️ Tina</h1>
+            
+            <div class="w-16 h-[2px] bg-gradient-to-r from-transparent via-pink-500 to-transparent mb-4"></div>
+            
+            <p class="text-xs text-gray-300 font-light leading-relaxed mb-6 px-2">
+                Aku bikin ini khusus buat kamu. Aku tidak bisa gambarin betapa bersyukurnya aku punya kamu. Makasih udah bertahan sama aku ya sayang. Jangan nangis ya, senyum dong manisku!
+            </p>
+            
+            <div class="w-full py-3.5 rounded-2xl bg-white/5 border border-white/10 flex flex-col items-center justify-center shadow-inner">
+                <span class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Status Selamanya</span>
+                <span class="text-lg font-bold text-pink-400 mt-1 tracking-wide drop-shadow-[0_0_10px_rgba(255,77,109,0.5)]">I Love You So Much, Sayang</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const storyLines = [
+            "Hai Tina cantikkk... ❤️",
+            "Lihat ke atas deh, lagunya udah jalan kan?",
+            "Sengaja aku putarkan lagu untuk kamuu...",
+            "Ini aku buat untuk kamu syangg aku buat penuh effort...",
+            "Aku tau aku bukan cowok yang sempurna...",
+            "Tapi usahaku buat selalu bikin kamu bahagia itu nyata.",
+            "Terima kasih ya udah hadir dan melengkapi hidup Ilham."
+        ];
+
+        const backgroundLyrics = [
+            "Kau adalah yang terindah...",
+            "Sempurna dirimu di mataku...",
+            "I love you so much, Tina",
+            "Terima kasih sayang...",
+            "Menjagamu adalah prioritasku",
+            "Selamanya hanya ada kamu",
+            "Bahagiamu adalah bahagiaku ❤️"
+        ];
+      
+        let currentLineIndex = 0;
+        let lineIsTyping = false;
+
+        function initiateExperience() {
+            // Audio setup and playback trigger
+            const audioTrack = document.getElementById('spotifyTrack');
+            audioTrack.volume = 0.7;
+            audioTrack.play().catch(err => console.log("Playback error: ", err));
+
+            // Sync structural custom progress bar with genuine track time
+            audioTrack.addEventListener('timeupdate', () => {
+                const percent = (audioTrack.currentTime / audioTrack.duration) * 100;
+                document.getElementById('trackProgress').style.width = percent + '%';
+            });
+
+            // Transition: Hide intro screen, drop down the spotify banner, open story screen
+            document.getElementById('screenIntro').style.opacity = '0';
+            document.getElementById('screenIntro').style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                document.getElementById('screenIntro').style.display = 'none';
+                document.getElementById('spotifyPlayer').classList.add('active');
+                
+                const storyScreen = document.getElementById('screenStory');
+                storyScreen.classList.remove('hidden-screen');
+                storyScreen.classList.add('active-screen');
+                
+                triggerTypewriter(storyLines[currentLineIndex]);
+                startLyricRain();
+            }, 600);
+        }
+
+        function triggerTypewriter(text) {
+            lineIsTyping = true;
+            const textPlaceholder = document.getElementById('storyText');
+            const buttonWrapper = document.getElementById('nextBtnBox');
+            
+            textPlaceholder.innerHTML = '';
+            buttonWrapper.classList.remove('opacity-100', 'pointer-events-auto');
+            buttonWrapper.classList.add('opacity-0', 'pointer-events-none');
+            
+            let charIndex = 0;
+            function appendChar() {
+                if (charIndex < text.length) {
+                    textPlaceholder.innerHTML += text.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(appendChar, Math.random() * 40 + 45); // Natural fluid variance delay
+                } else {
+                    lineIsTyping = false;
+                    setTimeout(() => {
+                        buttonWrapper.classList.remove('opacity-0', 'pointer-events-none');
+                        buttonWrapper.classList.add('opacity-100', 'pointer-events-auto');
+                    }, 400);
+                }
+            }
+            setTimeout(appendChar, 300);
+        }
+
+        function handleNextStep(event) {
+            if (lineIsTyping) return;
+
+            // Trigger micro heart explosion animation right at click coordinate
+            generateHeartExplosion(event.clientX, event.clientY);
+
+            currentLineIndex++;
+            if (currentLineIndex < storyLines.length) {
+                const targetText = document.getElementById('storyText');
+                targetText.style.opacity = '0';
+                
+                setTimeout(() => {
+                    targetText.style.opacity = '1';
+                    triggerTypewriter(storyLines[currentLineIndex]);
+                }, 300);
+            } else {
+                // End game emotional climax transition
+                const storyScreen = document.getElementById('screenStory');
+                storyScreen.classList.remove('active-screen');
+                storyScreen.classList.add('hidden-screen');
+                
+                setTimeout(() => {
+                    storyScreen.style.display = 'none';
+                    const finalScreen = document.getElementById('screenFinal');
+                    finalScreen.classList.remove('hidden-screen');
+                    finalScreen.classList.add('active-screen');
+                    
+                    // Intense rain frequency increase during final display phase
+                    setInterval(spawnSingleLyric, 1200);
+                }, 800);
+            }
+        }
+
+        function generateHeartExplosion(x, y) {
+            const particleColors = ['#ff4d6d', '#ff758f', '#ff8fa3', '#a29bfe', '#ffffff'];
+            for (let index = 0; index < 15; index++) {
+                const miniHeart = document.createElement('i');
+                miniHeart.classList.add('fa-solid', 'fa-heart', 'absolute', 'pointer-events-none');
+                
+                miniHeart.style.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                miniHeart.style.fontSize = Math.random() * 12 + 8 + 'px';
+                miniHeart.style.left = x + 'px';
+                miniHeart.style.top = y + 'px';
+                miniHeart.style.zIndex = '99';
+                
+                const radianAngle = Math.random() * Math.PI * 2;
+                const dynamicDistance = Math.random() * 100 + 50;
+                
+                const travelX = Math.cos(radianAngle) * dynamicDistance;
+                const travelY = Math.sin(radianAngle) * dynamicDistance;
+                
+                miniHeart.style.transition = 'all 1.2s cubic-bezier(0.1, 0.8, 0.3, 1)';
+                document.body.appendChild(miniHeart);
+                
+                setTimeout(() => {
+                    miniHeart.style.transform = `translate(${travelX}px, ${travelY}px) scale(0)`;
+                    miniHeart.style.opacity = '0';
+                }, 20);
+                
+                setTimeout(() => miniHeart.remove(), 1200);
+            }
+        }
+
+        function spawnSingleLyric() {
+            const container = document.getElementById('lyricContainer');
+            if (!container) return;
+            
+            const element = document.createElement('div');
+            element.classList.add('lyric-drop');
+            element.innerText = backgroundLyrics[Math.floor(Math.random() * backgroundLyrics.length)];
+            
+            element.style.left = Math.random() * 60 + 5 + 'vw';
+            element.style.fontSize = Math.random() * 10 + 18 + 'px';
+            element.style.animationDuration = Math.random() * 3 + 6 + 's';
+            
+            container.appendChild(element);
+            setTimeout(() => element.remove(), 9000);
+        }
+
+        function startLyricRain() {
+            setInterval(spawnSingleLyric, 2200);
+        }
+    </script>
+</body>
+</html>
